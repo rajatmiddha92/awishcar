@@ -1,0 +1,41 @@
+.head {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  font-size: 1.5rem;
+  gap: 2rem;
+}
+.inp-2,
+.inp-1 {
+  padding: 1rem 0.5rem;
+  font-size: 1.5rem;
+  border-radius: 5px;
+}
+.btn {
+  border-radius: 10px;
+  padding: 1rem 2rem;
+  font-size: 2rem;
+  cursor: pointer;
+  background-color: beige;
+  border: 0;
+}
+.chart-container {
+  width: 80vw;
+  margin: auto;
+}
+.graph-1,
+.graph-2,
+.graph-3 {
+  padding-top: 3rem;
+  padding-bottom: 5rem;
+}
+.details {
+  text-align: center;
+}
+.loading {
+  display: flex;
+  justify-content: center;
+  font-size: 2rem;
+  height: 100vh;
+  align-items: center;
+}
