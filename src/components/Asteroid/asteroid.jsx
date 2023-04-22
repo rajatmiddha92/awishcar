@@ -32,14 +32,26 @@ const Asteroid=()=>{
         setAsteroidData({labels: data.map(item => item.date), datasets: [{label: 'Asteroid Count', data: data.map(item => item.count)}]});
 
         // Extract data for nearest asteroid
-        const nearestAsteroid = result.data.near_earth_objects[Object.keys(result.data.near_earth_objects)[0]][0];
-        const nearestAsteroidData = [{x: nearestAsteroid.close_approach_data[0].close_approach_date, y: nearestAsteroid.close_approach_data[0].miss_distance.astronomical}];
-        setNearestAsteroidData({labels: ["Nearest Asteroid"], datasets: [{label: 'Miss Distance (in Astronomical Units)', data: nearestAsteroidData}]});
+        const nearestAsteroidList = result.data.near_earth_objects[Object.keys(result.data.near_earth_objects)[0]];
+        const nearestAsteroidData = {
+          labels: nearestAsteroidList.map((asteroid) => asteroid.close_approach_data[0].close_approach_date),
+          datasets: [{
+            label: 'Miss Distance (in Astronomical Units)',
+            data: nearestAsteroidList.map((asteroid) => asteroid.close_approach_data[0].miss_distance.astronomical),
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+          }]
+        };
+        setNearestAsteroidData(nearestAsteroidData);
 
         // Extract data for fastest asteroid
-        const fastestAsteroid = result.data.near_earth_objects[Object.keys(result.data.near_earth_objects)[0]].reduce((a, b) => a.close_approach_data[0].relative_velocity.kilometers_per_hour > b.close_approach_data[0].relative_velocity.kilometers_per_hour ? a : b);
-        const fastestAsteroidData = [{x: fastestAsteroid.close_approach_data[0].close_approach_date, y: fastestAsteroid.close_approach_data[0].relative_velocity.kilometers_per_hour}];
-        setFastestAsteroidData({labels: ["Fastest Asteroid"], datasets: [{label: 'Relative Velocity (km/h)', data: fastestAsteroidData}]});
+        const fastestAsteroidDayWise = [];
+       Object.keys(result.data.near_earth_objects).forEach((date) => {
+      const fastestAsteroid = result.data.near_earth_objects[date].reduce((a, b) => a.close_approach_data[0].relative_velocity.kilometers_per_hour > b.close_approach_data[0].relative_velocity.kilometers_per_hour ? a : b);
+      fastestAsteroidDayWise.push({x: date, y: fastestAsteroid.close_approach_data[0].relative_velocity.kilometers_per_hour});
+      });
+setFastestAsteroidData({labels: Object.keys(result.data.near_earth_objects), datasets: [{label: 'Fastest Asteroid', data: fastestAsteroidDayWise}]});
         setLoading(false)
         setDate({startdate:"",enddate:""})
         }
@@ -50,7 +62,7 @@ const Asteroid=()=>{
                 
         }
     }
-    console.log(asteroidData)
+    console.log(fastestAsteroidData,nearestAsteroidData)
 
     return (<>
         <section>
@@ -120,7 +132,7 @@ const Asteroid=()=>{
     <div className="details">
       
       {fastestAsteroidData.datasets.length ?  <h1>Fastest Asteroid : {fastestAsteroidData.datasets[0].data[0].y} km/h</h1> : ""}
-       {nearestAsteroidData.datasets.length ?<h1>Closest Asteroid : {nearestAsteroidData.datasets[0].data[0].y}</h1> : "" }
+      
        </div>
         </section>
 
